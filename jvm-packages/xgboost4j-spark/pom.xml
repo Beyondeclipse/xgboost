@@ -6,43 +6,135 @@
     <parent>
         <groupId>ml.dmlc</groupId>
         <artifactId>xgboost-jvm</artifactId>
-        <version>0.90</version>
+        <version>0.90-SNAPSHOT</version>
     </parent>
     <artifactId>xgboost4j-spark</artifactId>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>${maven-shade-plugin.version}</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
                 <configuration>
-                    <skipAssembly>false</skipAssembly>
+                  <artifactSet>
+                    <excludes>
+                      <exclude>org.apache.spark</exclude>
+                      <exclude>org.apache.hadoop</exclude>
+                      <exclude>org.scala-lang</exclude>
+                      <exclude>org.glassfish.hk2</exclude>
+                      <exclude>org.glassfish.jersey.core</exclude>
+                      <!--<exclude>mysql</exclude>
+                      <exclude>redis.clients</exclude>-->
+                      <exclude>org.glassfish.hk2.external</exclude>
+                      <exclude>com.google.code.findbugs</exclude>
+                      <exclude>com.google.inject</exclude>
+                      <exclude>javax.inject</exclude>
+                      <exclude>org.apache.parquet</exclude>
+                      <exclude>org.json4s</exclude>
+                      <exclude>com.ning</exclude>
+                      <exclude>org.xerial.snappy</exclude>
+                      <exclude>net.jpountz.lz4</exclude>
+                      <exclude>org.roaringbitmap</exclude>
+                      <exclude>io.netty</exclude>
+                      <exclude>com.clearspring.analytics</exclude>
+                      <exclude>com.fasterxml.jackson.core</exclude>
+                      <exclude>com.fasterxml.jackson.modul</exclude>
+                      <exclude>org.glassfish.jersey.bundles.repackaged</exclude>
+                      <exclude>org.glassfish.jersey.containers</exclude>
+<!--                      <exclude>org.codehaus.jackson</exclude>-->
+                      <exclude>com.twitter</exclude>
+                      <exclude>com.esotericsoftware</exclude>
+                      <exclude>org.apache.xbean</exclude>
+                      <exclude>xmlenc:xmlenc</exclude>
+                      <!--<exclude>com.google.protobuf</exclude>-->
+
+                      <exclude>org.apache.avro</exclude>
+                      <exclude>org.scalatest</exclude>
+                      <exclude>org.scala-lang.modules</exclude>
+                      <exclude>net.sf.py4j</exclude>
+                      <exclude>net.razorvine</exclude>
+                      <exclude>oro</exclude>
+                      <exclude>com.fasterxml.jackson.module</exclude>
+                      <exclude>aopalliance</exclude>
+                      <exclude>org.apache.mesos</exclude>
+                      <exclude>javax.ws.rs</exclude>
+                      <exclude>com.thoughtworks.paranamer</exclude>
+                      <exclude>org.apache.zookeeper</exclude>
+                      <exclude>org.apache.curator</exclude>
+                      <exclude>io.dropwizard.metrics</exclude>
+                      <exclude>org.spark-project.spark</exclude>
+                      <exclude>com.univocity</exclude>
+                      <exclude>org.codehaus.janino</exclude>
+                      <exclude>org.antlr</exclude>
+                      <exclude>javax.annotation</exclude>
+                      <exclude>org.glassfish.jersey.media</exclude>
+                      <exclude>javax.validation:validation-api</exclude>
+                      <exclude>org.apache.ivy</exclude>
+                      <exclude>commons-net</exclude>
+                      <exclude>net.java.dev.jets3t</exclude>
+                      <exclude>commons-codec</exclude>
+                      <exclude>commons-httpclient</exclude>
+                      <exclude>javax.servlet</exclude>
+                      <exclude>org.fusesource.leveldbjni</exclude>
+                      <exclude>org.mortbay.jetty</exclude>
+                      <exclude>org.tukaani</exclude>
+                    </excludes>
+                  </artifactSet>
+                  <filters>
+                    <filter>
+                      <artifact>*:*</artifact>
+                      <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                        <exclude>hive-site.xml</exclude>
+                      </excludes>
+                    </filter>
+                  </filters>
+<!--                  <outputFile>${basedir}/target/${project.artifactId}-${project.version}.jar</outputFile>-->
                 </configuration>
-            </plugin>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
     </build>
     <dependencies>
         <dependency>
             <groupId>ml.dmlc</groupId>
             <artifactId>xgboost4j</artifactId>
-            <version>0.90</version>
+            <version>0.90-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_${scala.binary.version}</artifactId>
-            <version>${spark.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_${scala.binary.version}</artifactId>
-            <version>${spark.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_${scala.binary.version}</artifactId>
-            <version>${spark.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-core-asl</artifactId>
+          <scope>compile</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-mapper-asl</artifactId>
+          <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

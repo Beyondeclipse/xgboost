@@ -6,7 +6,7 @@
 
     <groupId>ml.dmlc</groupId>
     <artifactId>xgboost-jvm</artifactId>
-    <version>0.90</version>
+    <version>0.90-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>XGBoost JVM Package</name>
     <description>JVM Package for XGBoost</description>
@@ -23,28 +23,101 @@
             <email>codingcat@apache.org</email>
         </developer>
     </developers>
-    <scm>
-        <connection>scm:git:git:/github.com/dmlc/xgboost.git</connection>
-        <developerConnection>scm:git:ssh://github.com/dmlc/xgboost.git</developerConnection>
-        <url>https://github.com/dmlc/xgboost</url>
-    </scm>
+<!--    <scm>-->
+<!--        <connection>scm:git:git:/github.com/dmlc/xgboost.git</connection>-->
+<!--        <developerConnection>scm:git:ssh://github.com/dmlc/xgboost.git</developerConnection>-->
+<!--        <url>https://github.com/dmlc/xgboost</url>-->
+<!--    </scm>-->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <flink.version>1.5.0</flink.version>
-        <spark.version>2.4.3</spark.version>
+        <spark.version>2.3.1</spark.version>
         <scala.version>2.11.12</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
+        <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+        <jackson_v1.version>1.9.13</jackson_v1.version>
     </properties>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>central_maven</id>-->
+<!--            <name>central maven</name>-->
+<!--            <url>https://repo1.maven.org/maven2</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
     <repositories>
-        <repository>
-            <id>central_maven</id>
-            <name>central maven</name>
-            <url>https://repo1.maven.org/maven2</url>
-        </repository>
+      <repository>
+        <id>VIP-nexus</id>
+        <url>http://mvn1.tools.vipshop.com/nexus/content/groups/public</url>
+        <releases>
+          <enabled>true</enabled>
+          <updatePolicy>always</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </releases>
+        <snapshots>
+          <enabled>true</enabled>
+          <updatePolicy>always</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </snapshots>
+      </repository>
+      <repository>
+        <id>vip_central</id>
+        <name>VIP FCS Central Repo</name>
+        <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/central</url>
+        <releases>
+          <enabled>true</enabled>
+          <updatePolicy>never</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </releases>
+        <snapshots>
+          <enabled>true</enabled>
+          <updatePolicy>never</updatePolicy>
+          <checksumPolicy>warn</checksumPolicy>
+        </snapshots>
+      </repository>
     </repositories>
+    <pluginRepositories>
+      <pluginRepository>
+        <id>vip-plugins</id>
+        <name>Nexus</name>
+        <url>http://mvn1.tools.vipshop.com/nexus/content/groups/public</url>
+        <releases>
+          <enabled>true</enabled>
+        </releases>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>
+      </pluginRepository>
+      <pluginRepository>
+        <id>vip-central-plugins</id>
+        <name>Nexus</name>
+        <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/central</url>
+        <releases>
+          <enabled>true</enabled>
+        </releases>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>
+      </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+      <!-- Publish the versioned releases here -->
+      <repository>
+        <id>releases</id>
+        <name>VIP nexus - releases</name>
+        <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/releases/</url>
+      </repository>
+
+      <!-- Publish the versioned snapshoots here -->
+      <snapshotRepository>
+        <id>snapshots</id>
+        <name>VIP snapshots</name>
+        <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/snapshots/</url>
+      </snapshotRepository>
+    </distributionManagement>
+
     <modules>
         <module>xgboost4j</module>
         <module>xgboost4j-example</module>
@@ -205,12 +278,12 @@
             </build>
         </profile>
     </profiles>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>ossrh</id>-->
+<!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
     <build>
         <resources>
             <resource>
@@ -219,29 +292,29 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.scalastyle</groupId>
-                <artifactId>scalastyle-maven-plugin</artifactId>
-                <version>0.8.0</version>
-                <configuration>
-                    <verbose>false</verbose>
-                    <failOnViolation>true</failOnViolation>
-                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
-                    <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>
-                    <configLocation>scalastyle-config.xml</configLocation>
-                    <outputEncoding>UTF-8</outputEncoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>checkstyle</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.scalastyle</groupId>-->
+<!--                <artifactId>scalastyle-maven-plugin</artifactId>-->
+<!--                <version>0.8.0</version>-->
+<!--                <configuration>-->
+<!--                    <verbose>false</verbose>-->
+<!--                    <failOnViolation>true</failOnViolation>-->
+<!--                    <includeTestSourceDirectory>true</includeTestSourceDirectory>-->
+<!--                    <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>-->
+<!--                    <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>-->
+<!--                    <configLocation>scalastyle-config.xml</configLocation>-->
+<!--                    <outputEncoding>UTF-8</outputEncoding>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>checkstyle</id>-->
+<!--                        <phase>validate</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -324,7 +397,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                     <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
             </plugin>
@@ -343,6 +416,41 @@
             </plugin>
         </plugins>
     </build>
+    <dependencyManagement>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-core_${scala.binary.version}</artifactId>
+          <version>${spark.version}</version>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-sql_${scala.binary.version}</artifactId>
+          <version>${spark.version}</version>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.spark</groupId>
+          <artifactId>spark-mllib_${scala.binary.version}</artifactId>
+          <version>${spark.version}</version>
+          <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-core-asl</artifactId>
+          <version>${jackson_v1.version}</version>
+          <scope>compile</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-mapper-asl</artifactId>
+          <version>${jackson_v1.version}</version>
+          <scope>compile</scope>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>com.esotericsoftware.kryo</groupId>
